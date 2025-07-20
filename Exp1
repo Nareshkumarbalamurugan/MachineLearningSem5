@@ -59,73 +59,43 @@ print("Mean Absolute Deviation:", round(mad, 2))
 print("Coefficient of Variation (CV):", round(cv, 2), "%")
 print("Skewness:", round(skewness, 2))
 print("Kurtosis (Excess):", round(kurtosis, 2))
-📤 Sample Output:
-yaml
-Copy
-Edit
-Data: [78, 85, 92, 70, 65, 88, 75, 90, 85, 80]
-Sorted Data: [65, 70, 75, 78, 80, 85, 85, 88, 90, 92]
-Mean: 80.8
-Median: 82.5
-Mode: [85]
-Standard Deviation: 8.49
-Mean Absolute Deviation: 6.56
-Coefficient of Variation (CV): 10.51 %
-Skewness: -0.16
-Kurtosis (Excess): -1.22
- Code:
+Code (Using NumPy and SciPy):
 python
 Copy
 Edit
-# Univariate data: marks of 10 students
-data = [78, 85, 92, 70, 65, 88, 75, 90, 85, 80]
-n = len(data)
+import numpy as np
+from scipy import stats
 
-# Sort data
-sorted_data = sorted(data)
+# Univariate data
+data = np.array([78, 85, 92, 70, 65, 88, 75, 90, 85, 80])
 
 # Mean
-total = 0
-for val in data:
-    total += val
-mean = total / n
+mean = np.mean(data)
 
 # Median
-if n % 2 == 0:
-    median = (sorted_data[n//2 - 1] + sorted_data[n//2]) / 2
-else:
-    median = sorted_data[n//2]
+median = np.median(data)
 
 # Mode
-frequency = {}
-for val in data:
-    frequency[val] = frequency.get(val, 0) + 1
-
-max_freq = max(frequency.values())
-mode = [k for k, v in frequency.items() if v == max_freq]
+mode_result = stats.mode(data, keepdims=True)
+mode = mode_result.mode[0]
 
 # Standard Deviation
-squared_diffs = [(x - mean)**2 for x in data]
-variance = sum(squared_diffs) / n
-std_dev = variance ** 0.5
+std_dev = np.std(data)
 
 # Mean Absolute Deviation (MAD)
-mad = sum(abs(x - mean) for x in data) / n
+mad = np.mean(np.abs(data - mean))
 
 # Coefficient of Variation (CV)
 cv = (std_dev / mean) * 100
 
 # Skewness
-m3 = sum((x - mean)**3 for x in data) / n
-skewness = m3 / (std_dev ** 3)
+skewness = stats.skew(data)
 
-# Kurtosis (Excess Kurtosis = Kurtosis - 3)
-m4 = sum((x - mean)**4 for x in data) / n
-kurtosis = m4 / (std_dev ** 4) - 3
+# Kurtosis (Excess)
+kurtosis = stats.kurtosis(data)  # default = Fisher’s definition, i.e. excess kurtosis
 
 # Output
-print("Data:", data)
-print("Sorted Data:", sorted_data)
+print("Data:", data.tolist())
 print("Mean:", round(mean, 2))
 print("Median:", median)
 print("Mode:", mode)
@@ -135,14 +105,13 @@ print("Coefficient of Variation (CV):", round(cv, 2), "%")
 print("Skewness:", round(skewness, 2))
 print("Kurtosis (Excess):", round(kurtosis, 2))
 📤 Sample Output:
-yaml
+mathematica
 Copy
 Edit
 Data: [78, 85, 92, 70, 65, 88, 75, 90, 85, 80]
-Sorted Data: [65, 70, 75, 78, 80, 85, 85, 88, 90, 92]
 Mean: 80.8
 Median: 82.5
-Mode: [85]
+Mode: 85
 Standard Deviation: 8.49
 Mean Absolute Deviation: 6.56
 Coefficient of Variation (CV): 10.51 %
